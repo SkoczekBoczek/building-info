@@ -19,7 +19,7 @@ Dla administratorów budynków, którzy pragną optymalizować koszty zarządzan
 
 ## Zespół projektowy
 
-- **Scrum Master:** Nikodem Witkowski, @SkoczekBoczek
-- **Proxy Product Owner:** Adrian Ciesielski, @Kruwczak
-- **Developer:** Jakub Stasierski, @JakubS-001
-- **Developer:** Jakub Walkowiak, @Lejkus
+- **Scrum Master:** Nikodem Witkowski, [@SkoczekBoczek](https://github.com/SkoczekBoczek)
+- **Proxy Product Owner:** Adrian Ciesielski, [@Kruwczak](https://github.com/Kruwczak)
+- **Developer:** Jakub Stasierski, [@JakubS-001](https://github.com/JakubS-001)
+- **Developer:** Jakub Walkowiak, [@Lejkus](https://github.com/Lejkus)
