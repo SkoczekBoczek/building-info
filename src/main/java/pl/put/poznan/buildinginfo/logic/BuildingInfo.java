@@ -1,9 +1,14 @@
 package pl.put.poznan.buildinginfo.logic;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * This is just an example to show that the logic should be outside the REST service.
  */
 public class BuildingInfo {
+
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private final String[] params;
 
@@ -18,6 +23,22 @@ public class BuildingInfo {
         }
         String name = building.getName() != null ? building.getName() : "unnamed";
         return "Building " + building.getId() + " (" + name + "), levels: " + building.getLevels().size();
+    }
+
+    public String getInfoJSON(Building building) {
+        try {
+            return OBJECT_MAPPER.writeValueAsString(building);
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException("Unable to serialize building information as JSON", e);
+        }
+    }
+
+    public void printInfoJSON(Building building) {
+        System.out.println(getInfoJSON(building));
+    }
+
+    public void prinIinfoJSON(Building building) {
+        printInfoJSON(building);
     }
 
     public String getInfo(int locationId) {
