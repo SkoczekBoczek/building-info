@@ -64,7 +64,7 @@ class BuildingInfoTest {
     }
 
     @Test
-    void misspelledPrintMethodPrintsJson() throws Exception {
+    void printJSON() throws Exception {
         Building building = new Building(1, "Budynek A", Collections.emptyList());
         BuildingInfo info = new BuildingInfo(new String[0]);
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -72,7 +72,7 @@ class BuildingInfoTest {
 
         try {
             System.setOut(new PrintStream(output, true, StandardCharsets.UTF_8.name()));
-            info.prinIinfoJSON(building);
+            info.printInfoJSON(building);
         } finally {
             System.setOut(originalOut);
         }

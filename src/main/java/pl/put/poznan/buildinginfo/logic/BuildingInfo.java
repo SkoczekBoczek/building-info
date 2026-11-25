@@ -37,10 +37,6 @@ public class BuildingInfo {
         System.out.println(getInfoJSON(building));
     }
 
-    public void prinIinfoJSON(Building building) {
-        printInfoJSON(building);
-    }
-
     public String getInfo(int locationId) {
         // placeholder example for GET requests by location id
         return "Location " + locationId + " info";
