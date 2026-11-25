@@ -1,7 +1,10 @@
 package pl.put.poznan.buildinginfo.logic;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a building consisting of levels.
@@ -25,5 +28,14 @@ public class Building extends Location {
 
     public void setLevels(List<Level> levels) {
         this.levels = levels != null ? levels : new ArrayList<>();
+    }
+
+    @Override
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    public double getArea() {
+        return levels.stream()
+                .filter(Objects::nonNull)
+                .mapToDouble(Level::getArea)
+                .sum();
     }
 }

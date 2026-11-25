@@ -17,6 +17,42 @@ Dla administratorów budynków, którzy pragną optymalizować koszty zarządzan
   - `heating` – poziom zużycia energii ogrzewania (`float`)
   - `light` – łączna moc oświetlenia
 
+## API
+
+Wszystkie endpointy przyjmują lub zwracają dane w formacie JSON.
+
+| Metoda | Endpoint | Działanie |
+| --- | --- | --- |
+| `POST` | `/buildings` | Dodaje budynek wraz z poziomami i pomieszczeniami albo zastępuje budynek o tym samym ID. Zwraca zapisany budynek jako JSON. |
+| `GET` | `/buildings/{buildingId}` | Zwraca budynek oraz sumaryczną powierzchnię jego poziomów. |
+| `GET` | `/buildings/{buildingId}/levels/{levelId}` | Zwraca poziom budynku oraz sumaryczną powierzchnię jego pomieszczeń. |
+| `GET` | `/buildings/{buildingId}/levels/{levelId}/rooms/{roomId}` | Zwraca pomieszczenie wraz z jego parametrami. |
+
+Przykładowe żądanie `POST /buildings` (`Content-Type: application/json`):
+
+```json
+{
+  "id": 1,
+  "name": "Budynek A",
+  "levels": [
+    {
+      "id": 10,
+      "name": "Parter",
+      "rooms": [
+        {
+          "id": 101,
+          "name": "Sala 101",
+          "area": 25.0,
+          "cube": 75.0,
+          "heating": 120.5,
+          "light": 300.0
+        }
+      ]
+    }
+  ]
+}
+```
+
 ## Zespół projektowy
 
 - **Scrum Master:** Nikodem Witkowski, [@SkoczekBoczek](https://github.com/SkoczekBoczek)

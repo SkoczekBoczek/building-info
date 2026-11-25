@@ -30,4 +30,6 @@ public abstract class Location {
     public void setName(String name) {
         this.name = name;
     }
+
+    public abstract double getArea();
 }
