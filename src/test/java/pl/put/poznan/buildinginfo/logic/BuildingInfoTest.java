@@ -46,6 +46,16 @@ class BuildingInfoTest {
     }
 
     @Test
+    void ignoresNullRoomsAndLevelsWhenCalculatingArea() {
+        Room room = new Room(101, "Sala 101", 25.0, 75.0, 120.5f, 300.0);
+        Level level = new Level(10, "Parter", Arrays.asList(null, room));
+        Building building = new Building(1, "Budynek A", Arrays.asList(null, level));
+
+        assertEquals(25.0, level.getArea());
+        assertEquals(25.0, building.getArea());
+    }
+
+    @Test
     void serializesBuildingHierarchyAsJson() throws Exception {
         Room room = new Room(101, "Sala 101", 25.0, 75.0, 120.5f, 300.0);
         Level level = new Level(10, "Parter", Collections.singletonList(room));
