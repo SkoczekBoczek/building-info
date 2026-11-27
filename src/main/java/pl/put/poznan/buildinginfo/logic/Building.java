@@ -41,6 +41,15 @@ public class Building extends Location {
 
     @Override
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    public double getCube() {
+        return levels.stream()
+                .filter(Objects::nonNull)
+                .mapToDouble(Level::getCube)
+                .sum();
+    }
+
+    @Override
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public double getLight() {
         return levels.stream()
                 .filter(Objects::nonNull)
