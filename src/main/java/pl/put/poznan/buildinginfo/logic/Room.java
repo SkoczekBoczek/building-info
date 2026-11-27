@@ -38,6 +38,7 @@ public class Room extends Location {
         this.cube = cube;
     }
 
+    @Override
     public float getHeating() {
         return heating;
     }

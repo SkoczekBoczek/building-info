@@ -50,6 +50,15 @@ public class Building extends Location {
 
     @Override
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    public float getHeating() {
+        return (float) levels.stream()
+                .filter(Objects::nonNull)
+                .mapToDouble(Level::getHeating)
+                .sum();
+    }
+
+    @Override
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public double getLight() {
         return levels.stream()
                 .filter(Objects::nonNull)

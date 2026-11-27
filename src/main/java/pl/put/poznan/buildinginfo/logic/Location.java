@@ -37,6 +37,8 @@ public abstract class Location {
 
     public abstract double getCube();
 
+    public abstract float getHeating();
+
     public abstract double getLight();
 
     /**
@@ -53,5 +55,22 @@ public abstract class Location {
             return 0.0;
         }
         return light / area;
+    }
+
+    /**
+     * Calculates heating energy consumption per cubic meter (m³) for this location.
+     * Returns 0.0 when total volume (cube) is non-positive, heating energy is negative,
+     * or either value is non-finite.
+     *
+     * @return heating energy consumption per m³
+     */
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    public double getHeatingPerCube() {
+        double cube = getCube();
+        double heating = getHeating();
+        if (!Double.isFinite(cube) || !Double.isFinite(heating) || cube <= 0.0 || heating < 0.0) {
+            return 0.0;
+        }
+        return heating / cube;
     }
 }
