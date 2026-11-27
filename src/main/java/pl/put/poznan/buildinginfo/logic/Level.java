@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Represents a building level (floor) consisting of rooms.
@@ -34,8 +33,17 @@ public class Level extends Location {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public double getArea() {
         return rooms.stream()
-                .filter(Objects::nonNull)
+                .filter(r -> r != null && r.getArea() > 0 && r.getLight() >= 0)
                 .mapToDouble(Room::getArea)
+                .sum();
+    }
+
+    @Override
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    public double getLight() {
+        return rooms.stream()
+                .filter(r -> r != null && r.getArea() > 0 && r.getLight() >= 0)
+                .mapToDouble(Room::getLight)
                 .sum();
     }
 }

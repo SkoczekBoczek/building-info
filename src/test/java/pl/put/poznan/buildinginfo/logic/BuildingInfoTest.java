@@ -56,6 +56,64 @@ class BuildingInfoTest {
     }
 
     @Test
+    void calculatesLightPerAreaForRoomLevelAndBuilding() {
+        Room firstRoom = new Room(101, "Sala 101", 10.0, 30.0, 50.0f, 100.0);
+        Room secondRoom = new Room(102, "Sala 102", 30.0, 90.0, 120.0f, 600.0);
+        Level groundFloor = new Level(10, "Parter", Arrays.asList(firstRoom, secondRoom));
+        Level upperFloor = new Level(11, "Piętro 1",
+                Collections.singletonList(new Room(201, "Sala 201", 10.0, 30.0, 40.0f, 50.0)));
+        Building building = new Building(1, "Budynek A", Arrays.asList(groundFloor, upperFloor));
+
+        assertEquals(10.0, firstRoom.getLightPerArea(), 1e-9);
+        assertEquals(20.0, secondRoom.getLightPerArea(), 1e-9);
+        assertEquals(17.5, groundFloor.getLightPerArea(), 1e-9);
+        assertEquals(5.0, upperFloor.getLightPerArea(), 1e-9);
+        assertEquals(15.0, building.getLightPerArea(), 1e-9);
+    }
+
+    @Test
+    void returnsZeroLightPerAreaForEmptyOrNonPositiveAreaLocations() {
+        Room zeroAreaRoom = new Room(101, "Schowek", 0.0, 0.0, 0.0f, 100.0);
+        Room negativeAreaRoom = new Room(102, "Błędny", -5.0, 0.0, 0.0f, 50.0);
+        Level emptyLevel = new Level(10, "Pusty poziom", Collections.emptyList());
+        Level zeroAreaLevel = new Level(11, "Zerowy poziom", Collections.singletonList(zeroAreaRoom));
+        Building emptyBuilding = new Building(1, "Pusty budynek", Collections.emptyList());
+        Building zeroAreaBuilding = new Building(2, "Zerowy budynek", Collections.singletonList(zeroAreaLevel));
+
+        assertEquals(0.0, zeroAreaRoom.getLightPerArea(), 1e-9);
+        assertEquals(0.0, negativeAreaRoom.getLightPerArea(), 1e-9);
+        assertEquals(0.0, emptyLevel.getLightPerArea(), 1e-9);
+        assertEquals(0.0, zeroAreaLevel.getLightPerArea(), 1e-9);
+        assertEquals(0.0, emptyBuilding.getLightPerArea(), 1e-9);
+        assertEquals(0.0, zeroAreaBuilding.getLightPerArea(), 1e-9);
+    }
+
+    @Test
+    void ignoresNullRoomsAndLevelsWhenCalculatingLightPerArea() {
+        Room room = new Room(101, "Sala 101", 25.0, 75.0, 120.5f, 300.0);
+        Level level = new Level(10, "Parter", Arrays.asList(null, room));
+        Building building = new Building(1, "Budynek A", Arrays.asList(null, level));
+
+        assertEquals(12.0, level.getLightPerArea(), 1e-9);
+        assertEquals(12.0, building.getLightPerArea(), 1e-9);
+    }
+
+    @Test
+    void ignoresRoomWithNegativeLightWhenCalculatingLightPerArea() {
+        Room firstRoom = new Room(101, "Sala 101", 10.0, 30.0, 50.0f, 100.0);
+        Room secondRoom = new Room(102, "Sala 102", 30.0, 90.0, 120.0f, 600.0);
+        Room negativeLightRoom = new Room(103, "Błędny pokój", 20.0, 60.0, 80.0f, -100.0);
+        Level level = new Level(10, "Parter", Arrays.asList(firstRoom, secondRoom, negativeLightRoom));
+        Building building = new Building(1, "Budynek A", Collections.singletonList(level));
+
+        assertEquals(0.0, negativeLightRoom.getLightPerArea(), 1e-9);
+        assertEquals(40.0, level.getArea(), 1e-9);
+        assertEquals(700.0, level.getLight(), 1e-9);
+        assertEquals(17.5, level.getLightPerArea(), 1e-9);
+        assertEquals(17.5, building.getLightPerArea(), 1e-9);
+    }
+
+    @Test
     void serializesBuildingHierarchyAsJson() throws Exception {
         Room room = new Room(101, "Sala 101", 25.0, 75.0, 120.5f, 300.0);
         Level level = new Level(10, "Parter", Collections.singletonList(room));
@@ -66,11 +124,14 @@ class BuildingInfoTest {
 
         assertEquals(1, result.get("id").asInt());
         assertEquals("Budynek A", result.get("name").asText());
+        assertEquals(12.0, result.get("lightPerArea").asDouble(), 1e-9);
         assertEquals(10, result.get("levels").get(0).get("id").asInt());
+        assertEquals(12.0, result.get("levels").get(0).get("lightPerArea").asDouble(), 1e-9);
         assertEquals(25.0, result.get("levels").get(0).get("rooms").get(0).get("area").asDouble());
         assertEquals(75.0, result.get("levels").get(0).get("rooms").get(0).get("cube").asDouble());
         assertEquals(120.5, result.get("levels").get(0).get("rooms").get(0).get("heating").asDouble());
         assertEquals(300.0, result.get("levels").get(0).get("rooms").get(0).get("light").asDouble());
+        assertEquals(12.0, result.get("levels").get(0).get("rooms").get(0).get("lightPerArea").asDouble(), 1e-9);
     }
 
     @Test

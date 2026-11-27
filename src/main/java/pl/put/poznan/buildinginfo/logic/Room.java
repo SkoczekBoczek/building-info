@@ -20,6 +20,7 @@ public class Room extends Location {
         this.light = light;
     }
 
+    @Override
     public double getArea() {
         return area;
     }
@@ -44,6 +45,7 @@ public class Room extends Location {
         this.heating = heating;
     }
 
+    @Override
     public double getLight() {
         return light;
     }
