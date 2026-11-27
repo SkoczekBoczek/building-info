@@ -40,6 +40,15 @@ public class Level extends Location {
 
     @Override
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    public double getCube() {
+        return rooms.stream()
+                .filter(r -> r != null && Double.isFinite(r.getCube()) && r.getCube() > 0)
+                .mapToDouble(Room::getCube)
+                .sum();
+    }
+
+    @Override
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public double getLight() {
         return rooms.stream()
                 .filter(r -> r != null && r.getArea() > 0 && r.getLight() >= 0)

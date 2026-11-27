@@ -35,6 +35,8 @@ public abstract class Location {
 
     public abstract double getArea();
 
+    public abstract double getCube();
+
     public abstract double getLight();
 
     /**

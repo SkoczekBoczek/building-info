@@ -56,6 +56,42 @@ class BuildingInfoTest {
     }
 
     @Test
+    void calculatesCubeForRoomLevelAndBuilding() {
+        Room firstRoom = new Room(101, "Sala 101", 25.0, 75.0, 120.5f, 300.0);
+        Room secondRoom = new Room(102, "Sala 102", 15.5, 46.5, 80.0f, 200.0);
+        Level level = new Level(10, "Parter", Arrays.asList(firstRoom, secondRoom));
+        Level upperLevel = new Level(11, "Piętro 1",
+                Collections.singletonList(new Room(201, "Sala 201", 8.5, 25.5, 70.0f, 150.0)));
+        Building building = new Building(1, "Budynek A", Arrays.asList(level, upperLevel));
+
+        assertEquals(75.0, firstRoom.getCube(), 1e-9);
+        assertEquals(121.5, level.getCube(), 1e-9);
+        assertEquals(25.5, upperLevel.getCube(), 1e-9);
+        assertEquals(147.0, building.getCube(), 1e-9);
+    }
+
+    @Test
+    void emptyLevelsAndBuildingsHaveZeroCube() {
+        assertEquals(0.0, new Level(10, "Parter", Collections.emptyList()).getCube(), 1e-9);
+        assertEquals(0.0, new Building(1, "Budynek A", Collections.emptyList()).getCube(), 1e-9);
+    }
+
+    @Test
+    void ignoresNullAndNonPositiveCubeRoomsAndLevelsWhenCalculatingCube() {
+        Room validRoom = new Room(101, "Sala 101", 25.0, 75.0, 120.5f, 300.0);
+        Room zeroCubeRoom = new Room(102, "Schowek", 5.0, 0.0, 10.0f, 20.0);
+        Room negativeCubeRoom = new Room(103, "Błędny", 10.0, -30.0, 40.0f, 50.0);
+        Room nanCubeRoom = new Room(104, "NaN", 10.0, Double.NaN, 40.0f, 50.0);
+        Room infiniteCubeRoom = new Room(105, "Inf", 10.0, Double.POSITIVE_INFINITY, 40.0f, 50.0);
+        Level level = new Level(10, "Parter",
+                Arrays.asList(null, validRoom, zeroCubeRoom, negativeCubeRoom, nanCubeRoom, infiniteCubeRoom));
+        Building building = new Building(1, "Budynek A", Arrays.asList(null, level));
+
+        assertEquals(75.0, level.getCube(), 1e-9);
+        assertEquals(75.0, building.getCube(), 1e-9);
+    }
+
+    @Test
     void calculatesLightPerAreaForRoomLevelAndBuilding() {
         Room firstRoom = new Room(101, "Sala 101", 10.0, 30.0, 50.0f, 100.0);
         Room secondRoom = new Room(102, "Sala 102", 30.0, 90.0, 120.0f, 600.0);
@@ -124,8 +160,10 @@ class BuildingInfoTest {
 
         assertEquals(1, result.get("id").asInt());
         assertEquals("Budynek A", result.get("name").asText());
+        assertEquals(75.0, result.get("cube").asDouble(), 1e-9);
         assertEquals(12.0, result.get("lightPerArea").asDouble(), 1e-9);
         assertEquals(10, result.get("levels").get(0).get("id").asInt());
+        assertEquals(75.0, result.get("levels").get(0).get("cube").asDouble(), 1e-9);
         assertEquals(12.0, result.get("levels").get(0).get("lightPerArea").asDouble(), 1e-9);
         assertEquals(25.0, result.get("levels").get(0).get("rooms").get(0).get("area").asDouble());
         assertEquals(75.0, result.get("levels").get(0).get("rooms").get(0).get("cube").asDouble());

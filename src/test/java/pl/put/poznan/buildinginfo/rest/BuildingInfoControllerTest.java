@@ -35,18 +35,23 @@ class BuildingInfoControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(2))
                 .andExpect(jsonPath("$.area").value(12.5))
+                .andExpect(jsonPath("$.cube").value(30.0))
                 .andExpect(jsonPath("$.lightPerArea").value(3.2));
 
         mockMvc.perform(get("/buildings/2"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.cube").value(30.0))
                 .andExpect(jsonPath("$.levels[0].area").value(12.5))
+                .andExpect(jsonPath("$.levels[0].cube").value(30.0))
                 .andExpect(jsonPath("$.levels[0].lightPerArea").value(3.2));
 
         mockMvc.perform(get("/buildings/2/levels/3"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.cube").value(30.0))
                 .andExpect(jsonPath("$.rooms[0].area").value(12.5))
+                .andExpect(jsonPath("$.rooms[0].cube").value(30.0))
                 .andExpect(jsonPath("$.rooms[0].lightPerArea").value(3.2));
 
         mockMvc.perform(get("/buildings/2/levels/3/rooms/4"))
@@ -54,6 +59,7 @@ class BuildingInfoControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name").value("Biuro"))
                 .andExpect(jsonPath("$.area").value(12.5))
+                .andExpect(jsonPath("$.cube").value(30.0))
                 .andExpect(jsonPath("$.lightPerArea").value(3.2));
     }
 

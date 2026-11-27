@@ -29,6 +29,7 @@ public class Room extends Location {
         this.area = area;
     }
 
+    @Override
     public double getCube() {
         return cube;
     }
