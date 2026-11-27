@@ -38,12 +38,27 @@ public class Level extends Location {
                 .sum();
     }
 
+    private static boolean hasValidCubeAndHeating(Room room) {
+        return room != null
+                && Double.isFinite(room.getCube()) && room.getCube() > 0
+                && Float.isFinite(room.getHeating()) && room.getHeating() >= 0;
+    }
+
     @Override
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public double getCube() {
         return rooms.stream()
-                .filter(r -> r != null && Double.isFinite(r.getCube()) && r.getCube() > 0)
+                .filter(Level::hasValidCubeAndHeating)
                 .mapToDouble(Room::getCube)
+                .sum();
+    }
+
+    @Override
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    public float getHeating() {
+        return (float) rooms.stream()
+                .filter(Level::hasValidCubeAndHeating)
+                .mapToDouble(Room::getHeating)
                 .sum();
     }
 

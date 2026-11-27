@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.put.poznan.buildinginfo.app.BuildingInfoApplication;
 
+import static org.hamcrest.Matchers.closeTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -36,23 +37,33 @@ class BuildingInfoControllerTest {
                 .andExpect(jsonPath("$.id").value(2))
                 .andExpect(jsonPath("$.area").value(12.5))
                 .andExpect(jsonPath("$.cube").value(30.0))
-                .andExpect(jsonPath("$.lightPerArea").value(3.2));
+                .andExpect(jsonPath("$.heating").value(10.0))
+                .andExpect(jsonPath("$.lightPerArea").value(3.2))
+                .andExpect(jsonPath("$.heatingPerCube").value(closeTo(10.0 / 30.0, 1e-9)));
 
         mockMvc.perform(get("/buildings/2"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.cube").value(30.0))
+                .andExpect(jsonPath("$.heating").value(10.0))
+                .andExpect(jsonPath("$.heatingPerCube").value(closeTo(10.0 / 30.0, 1e-9)))
                 .andExpect(jsonPath("$.levels[0].area").value(12.5))
                 .andExpect(jsonPath("$.levels[0].cube").value(30.0))
-                .andExpect(jsonPath("$.levels[0].lightPerArea").value(3.2));
+                .andExpect(jsonPath("$.levels[0].heating").value(10.0))
+                .andExpect(jsonPath("$.levels[0].lightPerArea").value(3.2))
+                .andExpect(jsonPath("$.levels[0].heatingPerCube").value(closeTo(10.0 / 30.0, 1e-9)));
 
         mockMvc.perform(get("/buildings/2/levels/3"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.cube").value(30.0))
+                .andExpect(jsonPath("$.heating").value(10.0))
+                .andExpect(jsonPath("$.heatingPerCube").value(closeTo(10.0 / 30.0, 1e-9)))
                 .andExpect(jsonPath("$.rooms[0].area").value(12.5))
                 .andExpect(jsonPath("$.rooms[0].cube").value(30.0))
-                .andExpect(jsonPath("$.rooms[0].lightPerArea").value(3.2));
+                .andExpect(jsonPath("$.rooms[0].heating").value(10.0))
+                .andExpect(jsonPath("$.rooms[0].lightPerArea").value(3.2))
+                .andExpect(jsonPath("$.rooms[0].heatingPerCube").value(closeTo(10.0 / 30.0, 1e-9)));
 
         mockMvc.perform(get("/buildings/2/levels/3/rooms/4"))
                 .andExpect(status().isOk())
@@ -60,7 +71,9 @@ class BuildingInfoControllerTest {
                 .andExpect(jsonPath("$.name").value("Biuro"))
                 .andExpect(jsonPath("$.area").value(12.5))
                 .andExpect(jsonPath("$.cube").value(30.0))
-                .andExpect(jsonPath("$.lightPerArea").value(3.2));
+                .andExpect(jsonPath("$.heating").value(10.0))
+                .andExpect(jsonPath("$.lightPerArea").value(3.2))
+                .andExpect(jsonPath("$.heatingPerCube").value(closeTo(10.0 / 30.0, 1e-9)));
     }
 
     @Test
