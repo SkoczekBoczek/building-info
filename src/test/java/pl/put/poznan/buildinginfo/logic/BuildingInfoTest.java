@@ -99,6 +99,21 @@ class BuildingInfoTest {
     }
 
     @Test
+    void ignoresRoomWithNegativeLightWhenCalculatingLightPerArea() {
+        Room firstRoom = new Room(101, "Sala 101", 10.0, 30.0, 50.0f, 100.0);
+        Room secondRoom = new Room(102, "Sala 102", 30.0, 90.0, 120.0f, 600.0);
+        Room negativeLightRoom = new Room(103, "Błędny pokój", 20.0, 60.0, 80.0f, -100.0);
+        Level level = new Level(10, "Parter", Arrays.asList(firstRoom, secondRoom, negativeLightRoom));
+        Building building = new Building(1, "Budynek A", Collections.singletonList(level));
+
+        assertEquals(0.0, negativeLightRoom.getLightPerArea(), 1e-9);
+        assertEquals(40.0, level.getArea(), 1e-9);
+        assertEquals(700.0, level.getLight(), 1e-9);
+        assertEquals(17.5, level.getLightPerArea(), 1e-9);
+        assertEquals(17.5, building.getLightPerArea(), 1e-9);
+    }
+
+    @Test
     void serializesBuildingHierarchyAsJson() throws Exception {
         Room room = new Room(101, "Sala 101", 25.0, 75.0, 120.5f, 300.0);
         Level level = new Level(10, "Parter", Collections.singletonList(room));
