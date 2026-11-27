@@ -38,4 +38,13 @@ public class Level extends Location {
                 .mapToDouble(Room::getArea)
                 .sum();
     }
+
+    @Override
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    public double getLight() {
+        return rooms.stream()
+                .filter(Objects::nonNull)
+                .mapToDouble(Room::getLight)
+                .sum();
+    }
 }
